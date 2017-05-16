@@ -84,10 +84,10 @@ DATABASES = {
 # In settings.py
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 8081)],
-        },
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("localhost", 8081)],
+        # },
         "ROUTING": "ratExample.routing.channel_routing",
     },
 }
