@@ -1,4 +1,3 @@
-
 from channels.routing import route
 
 from ratExample.consumers import ws_connect, ws_message, ws_disconnect

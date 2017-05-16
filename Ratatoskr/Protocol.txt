@@ -1,0 +1,9 @@
+{
+	"method": GET/UPDATE/CREATE/DELETE
+	"model": <appname>.<modelname>
+	"data":{
+		"name": "",
+		"email": "",
+		"isActive": ""
+	}	
+}
