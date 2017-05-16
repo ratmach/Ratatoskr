@@ -1,5 +1,5 @@
-function DataClass(isActive,name,email) {
-    this.isActive=isActive;this.name=name || "abcd";this.email=email;
+function DataClass(name,email,isActive) {
+    this.name=name || "abcd";this.email=email;this.isActive=isActive;
     this.changed=false;
     this.set = function (key, value) {
         var prevVal = this[key];
