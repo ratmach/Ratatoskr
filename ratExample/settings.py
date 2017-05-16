@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'Ratatoskr.apps.RatatoskrGenerator',
+    'example1',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Ratatoskr.urls'
+ROOT_URLCONF = 'ratExample.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Ratatoskr.wsgi.application'
+WSGI_APPLICATION = 'ratExample.wsgi.application'
 
 
 # Database
