@@ -1,10 +1,13 @@
+import os
+
 from django.apps import AppConfig
 from django.template.backends import django
+from django.db.models.fields import NOT_PROVIDED, CharField, TextField, EmailField, DateTimeField, IntegerField, FloatField
 
 
 class RatatoskrGenerator(AppConfig):
     name = 'Ratatoskr'
-    defaultModelMarkup = "Ratatoskr/defaultModel.js"
+    defaultModelMarkup = "Ratatoskr/defaultModel.Ratatoskr"
     destionation = 'static/js'
 
     def __init__(self, app_name, app_module):
@@ -23,33 +26,44 @@ class RatatoskrGenerator(AppConfig):
                 model = self.apps.get_model(app_label=apps, model_name=model)
                 if "Nuts" in model.__dict__:
                     print("Found nut in: {0}.".format(apps, model))
-                    self.generateJS(model, model.Nuts)
+                    with open(os.path.join(RatatoskrGenerator.destionation, "".join([model._meta.object_name, ".js"])),
+                              "w") as f:
+                        f.write(self.generateJS(model, model.Nuts))
+                        f.flush()
 
     def generateJS(self, model, nut):
         print(nut.public)
         nutSet = set(nut.public)
-        arguments = []
+        arguments = {}
         for variable in model._meta.fields:
             if variable.attname in nutSet:
-                arguments.append(variable.attname)
-                print("variable:{0} of type: {1}, with default of {2}, can be null: {3}, isUnique: {4}".format(
-                    variable, type(variable), variable.default, variable.null, variable.unique
-                ))
+                arguments[variable.attname] = {
+                    "type": type(variable),
+                    "null": variable.null,
+                    "unique": variable.unique
+                }
+                if type(variable.default) != type(NOT_PROVIDED):
+                    arguments[variable.attname]["default"] = variable.default
 
-        print(self.getPrototype(model._meta.object_name, arguments))
+        return self.getPrototype(model._meta.object_name, arguments)
 
     def getPrototype(self, name, arguments):
         return self.template.format(name, self.getArgumentsList(arguments), self.getPrototypeAssignment(arguments),
-                                        self.getUpdateFunction(name, arguments),
-                                        self.getCreateFunction(name, arguments),
-                                        self.getDeleteFunction(name, arguments), self.getGetFunction(name, arguments),
-                                        self.getCheckSetRules(name, arguments))
+                                    self.getUpdateFunction(name, arguments),
+                                    self.getCreateFunction(name, arguments),
+                                    self.getDeleteFunction(name, arguments), self.getGetFunction(name, arguments),
+                                    self.getCheckSetRules(name, arguments))
 
     def getArgumentsList(self, arguments):
         out = []
         for argument in arguments:
             out.append(argument)
         return ",".join(out)
+
+    def formatByType(self, value, type_):
+        if type(type_) == type(CharField) or type(type_) == type(TextField) or type(type_) == EmailField:
+            return "\"" + str(value) + "\""
+        return value
 
     def getPrototypeAssignment(self, arguments):
         out = []
@@ -58,6 +72,10 @@ class RatatoskrGenerator(AppConfig):
             out.append(argument)
             out.append("=")
             out.append(argument)
+            if "default" in arguments[argument]:
+                out.append(" || ")
+                tmp = self.formatByType(arguments[argument]["default"], arguments[argument]["type"])
+                out.append(tmp)
             out.append(";")
         return "".join(out)
 
