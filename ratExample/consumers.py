@@ -19,20 +19,28 @@ def ws_connect(message):
     message.channel_session['room'] = room
     Group("chat-%s" % room).add(message.reply_channel)
 
+
 # Connected to websocket.receive
 @channel_session
 def ws_message(message):
     text_ = message['text']
     loads = json.loads(text_)
     split = loads["model"].split('.')
-    appName = split[0]
-    modelName = split[1]
+    app_name = split[0]
+    model_name = split[1]
     data = loads['data']
     method = loads['method']
-    ModelGod.getHandleFunction(app_name=appName,model_name=modelName,data=data,method=method)
+
+    model = ModelGod.get_model(app_name, model_name)
+    handler = ModelGod.getHandleFunction(model, data=data, method=method)
+    if handler is not None:
+        handler(None, data)
+    else:
+        model.objects.create(**loads['data'])
     Group("chat-%s" % message.channel_session['room']).send({
         "text": text_,
     })
+
 
 # Connected to websocket.disconnect
 @channel_session
