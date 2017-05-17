@@ -24,28 +24,49 @@ def ws_connect(message):
 @channel_session
 def ws_message(message):
     text_ = message['text']
-    loads = json.loads(text_)
-    split = loads["model"].split('.')
+    request = json.loads(text_)
+    split = request["model"].split('.')
     app_name = split[0]
     model_name = split[1]
-    data = loads['data']
-    method = loads['method']
-
+    data = request['data']
+    method = request['method']
     model = ModelGod.get_model(app_name, model_name)
     handler = ModelGod.getHandleFunction(model, data=data, method=method)
     response = {}
+    data = request['data']
+
     if handler is not None:
         response = handler(None, data)
     else:
         if method == "CREATE":
-            model.objects.create(**loads)
+            created = model.objects.create(**data)
+            response = created
         elif method == "GET":
-            response = model.objects.get(id=data['id'])
+            got = model.objects.get(id=data['id'])
+            response = got
         elif method == "UPDATE":
-            pass
+            old = model.objects.get(id=data['id'])
+            for attr in data:
+                setattr(old, attr, data[attr])
+            old.save()
+            response = old
+        elif method == "DELETE":
+            model.objects.get(id=data['id']).delete()
+            response = "deleted"
+    response_string = json_from_data(response)
+
     Group("chat-%s" % message.channel_session['room']).send({
-        "text": response,
+        "text": str(response_string),
     })
+
+
+def json_from_data(object):
+    if type(object) is str:
+        return object
+    json_data = {}
+    for field in object._meta.fields:
+        json_data[field.name] = getattr(object, field.name)
+    return json_data
 
 
 # Connected to websocket.disconnect
