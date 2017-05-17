@@ -1,6 +1,5 @@
 import inspect
 
-from django.contrib import admin
 from django.db import models
 
 from django.template.backends import django
