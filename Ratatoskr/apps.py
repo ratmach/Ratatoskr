@@ -15,7 +15,7 @@ class RatatoskrGenerator(AppConfig):
 
     defaultGetFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
     defaultUpdateFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
-    defaultCreateFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
+    defaultCreateFunctionMarkup = "Ratatoskr/scriptTemplates/defaultCreateFunction.Ratatoskr"
     defaultDeleteFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
 
     destination = 'static/js'
@@ -31,6 +31,10 @@ class RatatoskrGenerator(AppConfig):
         with open(RatatoskrGenerator.defaultGetFunctionMarkup, "r") as f:
             tmp = f.readlines()
         self.getTemplate = "".join(tmp)
+        tmp = []
+        with open(RatatoskrGenerator.defaultCreateFunctionMarkup, "r") as f:
+            tmp = f.readlines()
+        self.cteateTemplate = "".join(tmp)
 
     def ready(self):
         print("Ratatoskr is collecting nuts")
@@ -66,7 +70,7 @@ class RatatoskrGenerator(AppConfig):
     def getPrototype(self, name, arguments, app, index_by):
         return self.template.format(name, self.getArgumentsList(arguments), self.getPrototypeAssignment(arguments),
                                     self.getUpdateFunction(name, arguments),
-                                    self.getCreateFunction(name, arguments),
+                                    self.getCreateFunction(name, app),
                                     self.getDeleteFunction(name, arguments),
                                     self.getGetFunction(name, app, index_by),
                                     self.getCheckSetRules(name, arguments))
@@ -99,8 +103,8 @@ class RatatoskrGenerator(AppConfig):
     def getUpdateFunction(self, name, arguments):
         return "undefined"
 
-    def getCreateFunction(self, name, arguments):
-        return "undefined"
+    def getCreateFunction(self, name, app):
+        return self.cteateTemplate.format(RatatoskrGenerator.socketPath, app, name)
 
     def getDeleteFunction(self, name, arguments):
         return "undefined"

@@ -1,4 +1,5 @@
 function {0}({1}) {{
+    this._public_list="{1}"
     {2}
     this.changed=false;
     this.observers = {{}};

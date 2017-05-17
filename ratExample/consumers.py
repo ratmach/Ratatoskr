@@ -23,6 +23,16 @@ def ws_connect(message):
 # Connected to websocket.receive
 @channel_session
 def ws_message(message):
+    try:
+        response_string = handle_request(message)
+    except Exception as e :
+        response_string  ="{\"exception\" : \""+str(e) +"\" }"
+    Group("chat-%s" % message.channel_session['room']).send({
+        "text": str(response_string),
+    })
+
+
+def handle_request(message):
     text_ = message['text']
     request = json.loads(text_)
     split = request["model"].split('.')
@@ -34,7 +44,6 @@ def ws_message(message):
     handler = ModelGod.getHandleFunction(model, data=data, method=method)
     response = {}
     data = request['data']
-
     if handler is not None:
         response = handler(None, data)
     else:
@@ -54,19 +63,18 @@ def ws_message(message):
             model.objects.get(id=data['id']).delete()
             response = "deleted"
     response_string = json_from_data(response)
-
-    Group("chat-%s" % message.channel_session['room']).send({
-        "text": str(response_string),
-    })
+    return response_string
 
 
 def json_from_data(object):
     if type(object) is str:
         return object
+    elif type(object) is dict:
+        return json.dumps(object)
     json_data = {}
     for field in object._meta.fields:
         json_data[field.name] = getattr(object, field.name)
-    return json_data
+    return json.dumps(json_data)
 
 
 # Connected to websocket.disconnect
