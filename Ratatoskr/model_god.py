@@ -18,5 +18,4 @@ class ModelGod:
                             if (hasattr(possibleHandler, '__ratamethod__')):
                                 if possibleHandler.__ratamethod__ == method:
                                     return possibleHandler(None, data)
-
         pass

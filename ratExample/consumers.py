@@ -26,11 +26,11 @@ def ws_message(message):
     text_ = message['text']
     loads = json.loads(text_)
     split = loads["model"].split('.')
-    appName = split[0]
-    modelName = split[1]
+    app_name = split[0]
+    model_name = split[1]
     data = loads['data']
     method = loads['method']
-    response = ModelGod.getHandleFunction(app_name=appName, model_name=modelName, data=data, method=method)
+    response = ModelGod.getHandleFunction(app_name=app_name, model_name=model_name, data=data, method=method)
     Group("chat-%s" % message.channel_session['room']).send({
         "text": response,
     })

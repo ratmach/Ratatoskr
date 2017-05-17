@@ -142,3 +142,5 @@ ENV/
 redis-stable/*
 
 redis-stable.tar.gz
+
+*.sqlite3
