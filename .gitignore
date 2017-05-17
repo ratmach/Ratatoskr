@@ -139,3 +139,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
+redis-stable/*
+
+redis-stable.tar.gz
