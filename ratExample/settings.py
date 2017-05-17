@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Ratatoskr.apps.RatatoskrGenerator',
-    'example1',
     'channels',
+    'example1',
 ]
 
 MIDDLEWARE = [

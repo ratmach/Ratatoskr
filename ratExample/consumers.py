@@ -19,6 +19,7 @@ def ws_connect(message):
     message.channel_session['room'] = room
     Group("chat-%s" % room).add(message.reply_channel)
 
+
 # Connected to websocket.receive
 @channel_session
 def ws_message(message):
@@ -29,10 +30,11 @@ def ws_message(message):
     modelName = split[1]
     data = loads['data']
     method = loads['method']
-    ModelGod.getHandleFunction(app_name=appName,model_name=modelName,data=data,method=method)
+    response = ModelGod.getHandleFunction(app_name=appName, model_name=modelName, data=data, method=method)
     Group("chat-%s" % message.channel_session['room']).send({
-        "text": text_,
+        "text": response,
     })
+
 
 # Connected to websocket.disconnect
 @channel_session

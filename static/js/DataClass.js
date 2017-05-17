@@ -1,6 +1,8 @@
-function DataClass(name,email,isActive) {
-    this.name=name || "abcd";this.email=email;this.isActive=isActive;
+function DataClass(index,isActive,id,name,email) {
+    this.index=index;this.isActive=isActive;this.id=id;this.name=name || "abcd";this.email=email;
     this.changed=false;
+    this.observers = {};
+
     this.set = function (key, value) {
         var prevVal = this[key];
         this[key] = value;
@@ -32,6 +34,31 @@ function DataClass(name,email,isActive) {
     this.update = undefined;
     this.create = undefined;
     this.delete = undefined;
-    this.get = undefined;
+    this.get = function (callback){
+        var that = this;
+        socket = new WebSocket("ws://" + window.location.host + "/chat/");
+        socket.onmessage = function(e) {
+            var tmp = JSON.parse(e.data);
+            for(var i in tmp){
+                that.set(i, tmp[i]);
+            }
+            that.set("changed", false);
+            if(callback){
+                callback(that);
+            }
+        };
+        socket.onopen = function() {
+            socket.send(JSON.stringify(
+                {
+                    "method": "GET",
+                    "model": "example1.DataClass",
+                    "data": {
+                        "id": that["id"]
+                    }
+                }
+            ));
+        };
+        if (socket.readyState == WebSocket.OPEN) socket.onopen();
+    };
     this.checkSetRule = undefined;
 }

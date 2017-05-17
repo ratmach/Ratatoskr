@@ -17,6 +17,6 @@ class ModelGod:
                             possibleHandler = model.__dict__[attr]
                             if (hasattr(possibleHandler, '__ratamethod__')):
                                 if possibleHandler.__ratamethod__ == method:
-                                    possibleHandler(None,data)
+                                    return possibleHandler(None, data)
 
         pass

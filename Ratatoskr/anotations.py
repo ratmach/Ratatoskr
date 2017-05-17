@@ -1,5 +1,6 @@
-def haldleRequest(method=None):
+def handleRequest(method=None):
     registry = {}
+
     def registrar(func):
         registry["s"] = func
         func.__ratamethod__ = method
@@ -9,5 +10,4 @@ def haldleRequest(method=None):
     return registrar
 
 
-handler = haldleRequest
-
+handler = handleRequest

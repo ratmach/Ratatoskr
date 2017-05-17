@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from Ratatoskr.anotations import handler
 
@@ -8,7 +10,16 @@ class DataClass(models.Model):
     index = models.IntegerField()
     isActive = models.BooleanField()
 
-    @handler(method="GET")
-    def handle(self,data):
-        print("data received: ",data)
+    class Nuts:
+        public = {'id', 'index', 'name', 'email', 'isActive'}
+        #TODO ordering
 
+        index_by = 'id'
+
+        assert(index_by in public)
+
+    @handler(method="GET")
+    def handle(self, data):
+        print("data received: ", data)
+        #THIS IS TEMPORARILY MOCK
+        return json.dumps({"name": "rati", "email": "rmach13@freeuni.edu.ge", "index": 1, "isActive": True})

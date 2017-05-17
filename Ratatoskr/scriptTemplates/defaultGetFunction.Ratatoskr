@@ -1,0 +1,26 @@
+function (callback){{
+        var that = this;
+        socket = new WebSocket("ws://" + window.location.host + "/{0}/");
+        socket.onmessage = function(e) {{
+            var tmp = JSON.parse(e.data);
+            for(var i in tmp){{
+                that.set(i, tmp[i]);
+            }}
+            that.set("changed", false);
+            if(callback){{
+                callback(that);
+            }}
+        }};
+        socket.onopen = function() {{
+            socket.send(JSON.stringify(
+                {{
+                    "method": "GET",
+                    "model": "{1}.{2}",
+                    "data": {{
+                        "{3}": that["{3}"]
+                    }}
+                }}
+            ));
+        }};
+        if (socket.readyState == WebSocket.OPEN) socket.onopen();
+    }}

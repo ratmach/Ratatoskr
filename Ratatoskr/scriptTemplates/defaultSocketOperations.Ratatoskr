@@ -1,0 +1,14 @@
+socket = new WebSocket("ws://" + window.location.host + "/{0}/");
+socket.onmessage = function(e) {{
+    alert(e.data);
+}}
+socket.onopen = function() {{
+    socket.send(JSON.stringify(
+        {
+            "method": "GET",
+            "model": "{1}.{2}",
+            "data": {}
+        }
+    ));
+}}
+if (socket.readyState == WebSocket.OPEN) socket.onopen();

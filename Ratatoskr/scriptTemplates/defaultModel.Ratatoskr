@@ -1,6 +1,8 @@
 function {0}({1}) {{
     {2}
     this.changed=false;
+    this.observers = {{}};
+
     this.set = function (key, value) {{
         var prevVal = this[key];
         this[key] = value;
