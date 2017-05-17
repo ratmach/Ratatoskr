@@ -17,6 +17,7 @@ class RatatoskrGenerator(AppConfig):
             tmp = f.readlines()
         self.template = "".join(tmp)
 
+
     def ready(self):
         print("Ratatoskr is collecting nuts")
         registered_apps = self.apps.all_models

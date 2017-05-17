@@ -1,4 +1,5 @@
 from django.db import models
+from Ratatoskr.anotations import handler
 
 
 class DataClass(models.Model):
@@ -7,5 +8,7 @@ class DataClass(models.Model):
     index = models.IntegerField()
     isActive = models.BooleanField()
 
-    class Nuts:
-        public = ("name", "email", "isActive")
+    @handler(method="GET")
+    def handle(self,data):
+        print("data received: ",data)
+
