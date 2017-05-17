@@ -32,9 +32,7 @@ function {0}({1}) {{
         this.observers[key].push(observer);
     }};
     this.update = {3};
-    this.create = function(){
-        if (socket.readyState == WebSocket.OPEN) socket.send({4});
-    };
+    this.create = {4};
 
     this.delete = {5};
     this.get = {6};

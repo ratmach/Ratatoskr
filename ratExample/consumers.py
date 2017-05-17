@@ -30,7 +30,19 @@ def ws_message(message):
     model_name = split[1]
     data = loads['data']
     method = loads['method']
-    response = ModelGod.getHandleFunction(app_name=app_name, model_name=model_name, data=data, method=method)
+
+    model = ModelGod.get_model(app_name, model_name)
+    handler = ModelGod.getHandleFunction(model, data=data, method=method)
+    response = {}
+    if handler is not None:
+        response = handler(None, data)
+    else:
+        if method == "CREATE":
+            model.objects.create(**loads)
+        elif method == "GET":
+            response = model.objects.get(id=data['id'])
+        elif method == "UPDATE":
+            pass
     Group("chat-%s" % message.channel_session['room']).send({
         "text": response,
     })
