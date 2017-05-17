@@ -10,5 +10,5 @@ class DataClass(models.Model):
 
     @handler(method="GET")
     def handle(self,data):
-        print("did it", data)
+        print("data received: ",data)
 

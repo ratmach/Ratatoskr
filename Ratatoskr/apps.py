@@ -9,7 +9,6 @@ class RatatoskrGenerator(AppConfig):
     name = 'Ratatoskr'
     defaultModelMarkup = "Ratatoskr/defaultModel.Ratatoskr"
     destionation = 'static/js'
-    apps = {}
 
     def __init__(self, app_name, app_module):
         super().__init__(app_name, app_module)
@@ -22,8 +21,6 @@ class RatatoskrGenerator(AppConfig):
     def ready(self):
         print("Ratatoskr is collecting nuts")
         registered_apps = self.apps.all_models
-
-        RatatoskrGenerator.apps = self.apps
         for apps in registered_apps:
             tmp = django.apps.all_models.get(apps)
             for model in tmp:

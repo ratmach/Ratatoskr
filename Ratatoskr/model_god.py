@@ -7,7 +7,6 @@ class ModelGod:
     @staticmethod
     def getHandleFunction(app_name, model_name, data, method):
         registered_apps = django.apps
-        print("did it ")
         for app in registered_apps.all_models:
             if app == app_name:
                 tmp = django.apps.all_models.get(app)
