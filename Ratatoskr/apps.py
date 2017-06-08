@@ -43,7 +43,7 @@ class RatatoskrGenerator(AppConfig):
             tmp = django.apps.all_models.get(apps)
             for model in tmp:
                 model = self.apps.get_model(app_label=apps, model_name=model)
-                if "Nuts" in model.__dict__:
+                if "Nuts" in model.__dict__ and "ignore_flag" not in model.Nuts.__dict__:
                     print("Found nut in: {0}.".format(apps, model))
                     with open(os.path.join(RatatoskrGenerator.destination, "".join([model._meta.object_name, ".js"])),
                               "w") as f:
@@ -55,6 +55,7 @@ class RatatoskrGenerator(AppConfig):
         nutSet = set(nut.public)
         index_by = nut.index_by
         arguments = {}
+        fields = sorted(model._meta.fields)
         for variable in model._meta.fields:
             if variable.attname in nutSet:
                 arguments[variable.attname] = {

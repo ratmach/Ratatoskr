@@ -1,10 +1,21 @@
 import json
 
 from django.db import models
+
+from Ratatoskr.abstractNut import AbstractNut
 from Ratatoskr.anotations import handler
 
 
-class DataClass(models.Model):
+class DataClass(AbstractNut):
+    def handleCREATE(self, data):
+        pass
+
+    def handleUPDATE(self, data):
+        pass
+
+    def handleGET(self, data):
+        pass
+
     name = models.CharField(max_length=255, default="abcd")
     email = models.EmailField()
     index = models.IntegerField()
@@ -12,14 +23,7 @@ class DataClass(models.Model):
 
     class Nuts:
         public = {'id', 'index', 'name', 'email', 'isActive'}
-        #TODO ordering
-
         index_by = 'id'
 
         assert(index_by in public)
 
-    @handler(method="GET")
-    def handle(self, data):
-        print("data received: ", data)
-        #THIS IS TEMPORARILY MOCK
-        return json.dumps({"name": "rati", "email": "rmach13@freeuni.edu.ge", "index": 1, "isActive": True})
