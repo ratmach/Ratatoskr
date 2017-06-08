@@ -25,3 +25,7 @@ class AbstractNut(models.Model):
     @abstractmethod
     def handleUPDATE(self, data):
         return NotImplemented
+
+    @abstractmethod
+    def JSON(self):
+        return NotImplemented

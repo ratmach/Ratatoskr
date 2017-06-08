@@ -72,31 +72,9 @@ function DataClass(id,name,email,index,isActive) {
     };
 
     this.delete = undefined;
-    this.get = function (callback){
+    this.get =     function (callback){
         var that = this;
-        socket = new WebSocket("ws://" + window.location.host + "/chat/");
-        socket.onmessage = function(e) {
-            var tmp = JSON.parse(e.data);
-            for(var i in tmp){
-                that.set(i, tmp[i]);
-            }
-            that.set("changed", false);
-            if(callback){
-                callback(that);
-            }
-        };
-        socket.onopen = function() {
-            socket.send(JSON.stringify(
-                {
-                    "method": "GET",
-                    "model": "example1.DataClass",
-                    "data": {
-                        "id": that["id"]
-                    }
-                }
-            ));
-        };
-        if (socket.readyState == WebSocket.OPEN) socket.onopen();
+        queueRequest({"id": that["id"]},"GET",  "example1.DataClass", callback);
     };
     this.checkSetRule = undefined;
 }

@@ -1,12 +1,19 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Ratatoskr</title>
 
-   <script src="static/js/DataClass.js" type="application/javascript"></script>
+    <script src="{% static 'js/Oak.js' %}"></script>
+    <script src="{% static 'js/DataClass.js' %}" type="application/javascript"></script>
 </head>
 <body>
 DataClass
 </body>
+<script>
+    initOak(function(e){
+        console.log("oak initialized");
+    });
+</script>
 </html>
