@@ -1,4 +1,11 @@
     function (callback){{
         var that = this;
-        queueRequest({{"{3}": that["{3}"]}},"GET",  "{1}.{2}", callback);
+        queueRequest({{"{2}": that["{2}"]}},"GET",  "{0}.{1}", function(e){{
+            for(var tmp in e){{
+                that.set(tmp, e[tmp]);
+            }}
+            if(callback)
+                callback(that);
+        }}
+        );
     }}

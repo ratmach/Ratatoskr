@@ -1,0 +1,10 @@
+    function (callback){{
+        var that = this;
+        queueRequest(that,"UPDATE",  "{0}.{1}", function(e){{
+            for(var tmp in e){{
+                that.set(tmp, e[tmp]);
+            }}
+            if(callback)
+                callback(that);
+        }});
+    }}

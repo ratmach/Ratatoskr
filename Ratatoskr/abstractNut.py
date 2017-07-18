@@ -26,6 +26,11 @@ class AbstractNut(models.Model):
     def handleUPDATE(self, data):
         return NotImplemented
 
+    @handler(method="DELETE")
+    @abstractmethod
+    def handleDELETE(self, data):
+        return NotImplemented
+
     @abstractmethod
     def JSON(self):
         return NotImplemented

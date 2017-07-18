@@ -14,6 +14,16 @@ DataClass
 <script>
     initOak(function(e){
         console.log("oak initialized");
+        testCreate();
     });
+    function testCreate() {
+        var tmp2 = new DataClass();
+        tmp2.set("name", "რატი მაჭავარიანი");
+        tmp2.set("email", "rmach13@freeuni.edu.ge");
+        tmp2.set("isActive", true);
+        tmp2.create(function (e) {
+            console.log(tmp2);
+        });
+    }
 </script>
 </html>

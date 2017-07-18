@@ -1,0 +1,4 @@
+    function (callback){{
+        var that = this;
+        queueRequest(that,"DELETE",  "{0}.{1}", callback);
+    }}

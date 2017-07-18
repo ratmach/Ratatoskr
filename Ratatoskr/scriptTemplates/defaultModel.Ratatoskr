@@ -38,4 +38,5 @@ function {0}({1}) {{
     this.delete = {5};
     this.get = {6};
     this.checkSetRule = {7};
+    this.model = "{8}";
 }}

@@ -33,6 +33,7 @@ def ws_message(message):
 
 
 def handle_request(message):
+    print(message)
     text_ = message['text']
     request = json.loads(text_)
     split = request["model"].split('.')
@@ -47,14 +48,16 @@ def handle_request(message):
     if handler is not None:
         response = handler(None, data)
     else:
+        print(method)
+        print(data)
         if method == "CREATE":
             created = model.objects.create(**data)
             response = created
         elif method == "GET":
-            got = model.objects.get(id=data['id'])
+            got = model.objects.get(pk=data['pk'])
             response = got
         elif method == "UPDATE":
-            old = model.objects.get(id=data['id'])
+            old = model.objects.get(pk=data['pk'])
             for attr in data:
                 setattr(old, attr, data[attr])
             old.save()
@@ -70,6 +73,8 @@ def json_from_data(object):
     if type(object) is str:
         return object
     elif type(object) is dict:
+        return json.dumps(object)
+    elif type(object) is list:
         return json.dumps(object)
     json_data = {}
     for field in object._meta.fields:

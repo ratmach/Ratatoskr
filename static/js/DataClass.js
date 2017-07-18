@@ -32,49 +32,42 @@ function DataClass(id,name,email,index,isActive) {
         }
         this.observers[key].push(observer);
     };
-    this.update = undefined;
-    this.create = function (callback){
+    this.update =     function (callback){
         var that = this;
-
-        socket = new WebSocket("ws://" + window.location.host + "/chat/");
-
-        socket.onmessage = function(e) {
-
-            var tmp = JSON.parse(e.data);
-             if(tmp.exception){
-                console.log(tmp)
-             }
-
-            for(var i in tmp){
-                that.set(i, tmp[i]);
+        queueRequest(that,"UPDATE",  "example1.DataClass", function(e){
+            for(var tmp in e){
+                that.set(tmp, e[tmp]);
             }
-            that.set("changed", false);
-            if(callback){
+            if(callback)
                 callback(that);
+        });
+    };
+    this.create =     function (callback){
+        var that = this;
+        queueRequest(that,"CREATE",  "example1.DataClass", function(e){
+            for(var tmp in e){
+                that.set(tmp, e[tmp]);
             }
-        };
-
-        socket.onopen = function() {
-        var params_split = that._public_list.split(',');
-        var json_params = {};
-        for (var i = 0 ; i < params_split.length; i ++){
-            json_params[params_split[i]]=that[params_split[i]]
-        }
-            socket.send(JSON.stringify(
-                {
-                    "method": "CREATE",
-                    "model": "example1.DataClass",
-                    "data": json_params
-                }
-            ));
-        };
-        if (socket.readyState == WebSocket.OPEN) socket.onopen();
+            if(callback)
+                callback(that);
+        });
     };
 
-    this.delete = undefined;
+    this.delete =     function (callback){
+        var that = this;
+        queueRequest(that,"DELETE",  "example1.DataClass", callback);
+    };
     this.get =     function (callback){
         var that = this;
-        queueRequest({"id": that["id"]},"GET",  "example1.DataClass", callback);
+        queueRequest({"id": that["id"]},"GET",  "example1.DataClass", function(e){
+            for(var tmp in e){
+                that.set(tmp, e[tmp]);
+            }
+            if(callback)
+                callback(that);
+        }
+        );
     };
     this.checkSetRule = undefined;
+    this.model = "example1.DataClass";
 }

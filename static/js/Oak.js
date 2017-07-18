@@ -12,6 +12,15 @@ var oakQueue = []; //update socket ის რიგი
 function initOak(callback) {
     oakTree = new WebSocket("ws://" + window.location.host + "/chat/");
     oakTreeSend = new WebSocket("ws://" + window.location.host + "/chat/");
+    oakTree.onmessage = function (e) {
+        var tmp = JSON.parse(e.data);
+        oakTree.onmessage = oakmessage;
+    };
+    oakTreeSend.onopen = function () {
+        if (callback) {
+            callback();
+        }
+    };
     oakTree.onopen = function () {
         oakTree.send(
             JSON.stringify({
@@ -21,13 +30,6 @@ function initOak(callback) {
             })
         );
     };
-    oakTree.onmessage = function (e) {
-        var tmp = JSON.parse(e.data);
-        if (callback) {
-            callback(tmp);
-        }
-        oakTree.onmessage = oakmessage;
-    }
 }
 /***
  * სვამს მოთხოვნას რიგში
@@ -37,15 +39,18 @@ function initOak(callback) {
  * @param callback callback შესრულების შემდეგ
  */
 function queueRequest(data, method, model, callback) {
-    data["method"] = method;
-    data["model"] = model;
+    tmp = {};
+    tmp["data"] = data;
+    tmp["method"] = method;
+    tmp["model"] = model;
     oakQueue.push({
-        "data": data,
+        "data": tmp,
         "callback": callback
     });
     console.log(oakQueue);
-    if (oakQueue.length === 1)
+    if (oakQueue.length === 1) {
         startRatatoskr();
+    }
 }
 /**
  * სინქრონიზირებული გამოძახება, რომელიც აგვარებს რიგით გამოძახებას
@@ -53,13 +58,13 @@ function queueRequest(data, method, model, callback) {
 function startRatatoskr() {
     var tmp = oakQueue.pop();
     oakTreeSend.onmessage = function (e) {
+        console.log(e);
         if ("callback" in tmp) {
-            tmp["callback"](e);
+            tmp["callback"](JSON.parse(e.data));
         }
         if(oakQueue.length > 0)
             startRatatoskr();
     };
-    console.log(tmp);
     oakTreeSend.send(JSON.stringify(
         tmp.data
     ));

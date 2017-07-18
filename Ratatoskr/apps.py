@@ -14,9 +14,9 @@ class RatatoskrGenerator(AppConfig):
     defaultModelMarkup = "Ratatoskr/scriptTemplates/defaultModel.Ratatoskr"
 
     defaultGetFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
-    defaultUpdateFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
+    defaultUpdateFunctionMarkup = "Ratatoskr/scriptTemplates/defaultUpdateFunction.Ratatoskr"
     defaultCreateFunctionMarkup = "Ratatoskr/scriptTemplates/defaultCreateFunction.Ratatoskr"
-    defaultDeleteFunctionMarkup = "Ratatoskr/scriptTemplates/defaultGetFunction.Ratatoskr"
+    defaultDeleteFunctionMarkup = "Ratatoskr/scriptTemplates/defaultDeleteFunction.Ratatoskr"
 
     destination = 'static/js'
 
@@ -34,7 +34,13 @@ class RatatoskrGenerator(AppConfig):
         tmp = []
         with open(RatatoskrGenerator.defaultCreateFunctionMarkup, "r") as f:
             tmp = f.readlines()
-        self.cteateTemplate = "".join(tmp)
+        self.createTemplate = "".join(tmp)
+        with open(RatatoskrGenerator.defaultUpdateFunctionMarkup, "r") as f:
+            tmp = f.readlines()
+        self.updateTemplate = "".join(tmp)
+        with open(RatatoskrGenerator.defaultDeleteFunctionMarkup, "r") as f:
+            tmp = f.readlines()
+        self.deleteTemplate = "".join(tmp)
 
     def ready(self):
         print("Ratatoskr is collecting nuts")
@@ -70,11 +76,12 @@ class RatatoskrGenerator(AppConfig):
 
     def getPrototype(self, name, arguments, app, index_by):
         return self.template.format(name, self.getArgumentsList(arguments), self.getPrototypeAssignment(arguments),
-                                    self.getUpdateFunction(name, arguments),
+                                    self.getUpdateFunction(name, app),
                                     self.getCreateFunction(name, app),
-                                    self.getDeleteFunction(name, arguments),
+                                    self.getDeleteFunction(name, app),
                                     self.getGetFunction(name, app, index_by),
-                                    self.getCheckSetRules(name, arguments))
+                                    self.getCheckSetRules(name, arguments),
+                                    ".".join([app, name]))
 
     def getArgumentsList(self, arguments):
         out = []
@@ -101,17 +108,17 @@ class RatatoskrGenerator(AppConfig):
             out.append(";")
         return "".join(out)
 
-    def getUpdateFunction(self, name, arguments):
-        return "undefined"
+    def getUpdateFunction(self, name, app):
+        return self.updateTemplate.format(app, name)
 
     def getCreateFunction(self, name, app):
-        return self.cteateTemplate.format(RatatoskrGenerator.socketPath, app, name)
+        return self.createTemplate.format(app, name)
 
-    def getDeleteFunction(self, name, arguments):
-        return "undefined"
+    def getDeleteFunction(self, name, app):
+        return self.deleteTemplate.format(app, name)
 
     def getGetFunction(self, name, app, index_by):
-        return self.getTemplate.format(RatatoskrGenerator.socketPath, app, name, index_by)
+        return self.getTemplate.format(app, name, index_by)
 
     def getCheckSetRules(self, name, arguments):
         return "undefined"
