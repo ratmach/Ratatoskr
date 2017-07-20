@@ -14,6 +14,7 @@ function initOak(callback) {
     oakTreeSend = new WebSocket("ws://" + window.location.host + "/chat/");
     oakTree.onmessage = function (e) {
         var tmp = JSON.parse(e.data);
+        console.log("tree init");
         oakTree.onmessage = oakmessage;
     };
     oakTreeSend.onopen = function () {
@@ -39,7 +40,7 @@ function initOak(callback) {
  * @param callback callback შესრულების შემდეგ
  */
 function queueRequest(data, method, model, callback) {
-    tmp = {};
+    var tmp = {};
     tmp["data"] = data;
     tmp["method"] = method;
     tmp["model"] = model;
@@ -58,11 +59,10 @@ function queueRequest(data, method, model, callback) {
 function startRatatoskr() {
     var tmp = oakQueue.pop();
     oakTreeSend.onmessage = function (e) {
-        console.log(e);
         if ("callback" in tmp) {
             tmp["callback"](JSON.parse(e.data));
         }
-        if(oakQueue.length > 0)
+        if (oakQueue.length > 0)
             startRatatoskr();
     };
     oakTreeSend.send(JSON.stringify(
@@ -82,6 +82,13 @@ function subscribeSocket(dataType, objpk, callback) {
         oak_subscription[dataType] = {};
     }
     oak_subscription[dataType][objpk] = callback;
+    oakTree.send(
+        JSON.stringify({
+            "data": {},
+            "method": "SUBSCRIBE",
+            "model": dataType
+        })
+    );
 }
 /**
  * აუქმებს ცვლადის მოსმენას
@@ -100,12 +107,13 @@ function oakmessage(e) {
     var tmp = JSON.parse(e.data);
     if (!("datatype" in tmp))
         return;
+    console.log(tmp);
     var datatype = tmp["datatype"];
     var pk = tmp["pk"];
     if (datatype in oak_subscription) {
         func = oak_subscription[datatype][pk];
         if (func !== undefined) {
-            func(tmp["data"]);
+            func(tmp);
         }
     }
 }

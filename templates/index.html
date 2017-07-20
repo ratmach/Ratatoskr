@@ -9,12 +9,16 @@
     <script src="{% static 'js/DataClass.js' %}" type="application/javascript"></script>
 </head>
 <body>
-DataClass
+<div id="subscribeTest">
+    DataClass PK=1:
+    <label id="name"></label>
+    <label id="email"></label>
+    <label id="isActive"></label>
+</div>
 </body>
 <script>
-    initOak(function(e){
+    initOak(function (e) {
         console.log("oak initialized");
-        testCreate();
     });
     function testCreate() {
         var tmp2 = new DataClass();
@@ -22,7 +26,32 @@ DataClass
         tmp2.set("email", "rmach13@freeuni.edu.ge");
         tmp2.set("isActive", true);
         tmp2.create(function (e) {
-            console.log(tmp2);
+
+        });
+    }
+    function queueCustom() {
+        queueRequest({"name": "რატი"}, "nameLIKE", new DataClass(1).model, function (e) {
+            console.log(e);
+        });
+    }
+
+    var currentPerson = new DataClass(5);
+    function subscribe() {
+        var name_ = document.getElementById("name");
+        var email_ = document.getElementById("email");
+        var isActive_ = document.getElementById("isActive");
+
+        currentPerson.setObserver("name", function (e) {
+            name_.innerHTML = currentPerson.name;
+        });
+        currentPerson.setObserver("email", function (e) {
+            email_.innerHTML = currentPerson.email;
+        });
+        currentPerson.setObserver("isActive", function (e) {
+            isActive_.innerHTML = currentPerson.isActive;
+        });
+        currentPerson.get(function (e) {
+            subscribeSocket(e.model, e.ID, currentPerson.sync);
         });
     }
 </script>

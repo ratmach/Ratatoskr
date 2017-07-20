@@ -5,6 +5,8 @@ from django.template.backends import django
 from django.db.models.fields import NOT_PROVIDED, CharField, TextField, EmailField, DateTimeField, IntegerField, \
     FloatField
 
+from ratExample.consumers import messageToSubscribed
+
 
 class RatatoskrGenerator(AppConfig):
     socketPath = "chat"
@@ -50,6 +52,16 @@ class RatatoskrGenerator(AppConfig):
             for model in tmp:
                 model = self.apps.get_model(app_label=apps, model_name=model)
                 if "Nuts" in model.__dict__ and "ignore_flag" not in model.Nuts.__dict__:
+                    oldsave = model.save
+
+                    def savef(self, *args, **kwargs):
+                        try:
+                            oldsave(self, *args, **kwargs)
+                            messageToSubscribed(self._meta.label, self.JSON())
+                        except Exception:
+                            pass
+
+                    model.save = savef
                     print("Found nut in: {0}.".format(apps, model))
                     with open(os.path.join(RatatoskrGenerator.destination, "".join([model._meta.object_name, ".js"])),
                               "w") as f:

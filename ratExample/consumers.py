@@ -5,8 +5,9 @@ from channels import Group
 from channels.sessions import channel_session
 
 # Connected to websocket.connect
-from Ratatoskr.apps import RatatoskrGenerator
 from Ratatoskr.model_god import ModelGod
+
+activeSessions = {}
 
 
 @channel_session
@@ -25,15 +26,14 @@ def ws_connect(message):
 def ws_message(message):
     try:
         response_string = handle_request(message)
-    except Exception as e :
-        response_string  ="{\"exception\" : \""+str(e) +"\" }"
+    except Exception as e:
+        response_string = "{\"exception\" : \"" + str(e) + "\" }"
     Group("chat-%s" % message.channel_session['room']).send({
         "text": str(response_string),
     })
 
 
 def handle_request(message):
-    print(message)
     text_ = message['text']
     request = json.loads(text_)
     split = request["model"].split('.')
@@ -48,8 +48,6 @@ def handle_request(message):
     if handler is not None:
         response = handler(None, data)
     else:
-        print(method)
-        print(data)
         if method == "CREATE":
             created = model.objects.create(**data)
             response = created
@@ -65,8 +63,23 @@ def handle_request(message):
         elif method == "DELETE":
             model.objects.get(id=data['id']).delete()
             response = "deleted"
+        elif method == "SUBSCRIBE":
+            if request["model"] not in activeSessions:
+                activeSessions[request["model"]] = {}
+            activeSessions[request["model"]][message.channel_session['room']] = True
     response_string = json_from_data(response)
     return response_string
+
+
+def messageToSubscribed(model, data):
+    if data is None:
+        return
+    data["datatype"] = model
+    if model in activeSessions:
+        for session in activeSessions[model]:
+            Group("chat-%s" % session).send({
+                "text": str(json_from_data(data)),
+            })
 
 
 def json_from_data(object):

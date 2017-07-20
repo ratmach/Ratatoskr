@@ -70,4 +70,10 @@ function DataClass(id,name,email,index,isActive) {
     };
     this.checkSetRule = undefined;
     this.model = "example1.DataClass";
+    this.sync = function(data){
+        for(var d in data){
+            console.log(d);
+            this.set(d, data[d]);
+        }
+    }
 }

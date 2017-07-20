@@ -26,8 +26,8 @@ class DataClass(models.Model):
         tmp = DataClass.objects.filter(id=data["id"])
         tmp = tmp.get()
         tmp.name = data["name"]
-        tmp.name = data["email"]
-        tmp.name = data["isActive"] == "true"
+        tmp.email = data["email"]
+        tmp.isActive = data["isActive"] == "true"
         tmp.save()
         return tmp.JSON()
 

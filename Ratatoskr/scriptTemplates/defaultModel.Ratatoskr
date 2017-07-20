@@ -39,4 +39,9 @@ function {0}({1}) {{
     this.get = {6};
     this.checkSetRule = {7};
     this.model = "{8}";
+    this.sync = function(data){{
+        for(var d in data){{
+            this.set(d, data[d]);
+        }}
+    }}
 }}
