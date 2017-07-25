@@ -1,6 +1,7 @@
 import os
 
 from django.apps import AppConfig
+from django.db import transaction
 from django.template.backends import django
 from django.db.models.fields import NOT_PROVIDED, CharField, TextField, EmailField, DateTimeField, IntegerField, \
     FloatField
@@ -56,9 +57,11 @@ class RatatoskrGenerator(AppConfig):
 
                     def savef(self, *args, **kwargs):
                         try:
-                            oldsave(self, *args, **kwargs)
+                            with transaction.atomic():
+                                oldsave(self, *args, **kwargs)
                             messageToSubscribed(self._meta.label, self.JSON())
-                        except Exception:
+                        except Exception as e:
+                            print(e)
                             pass
 
                     model.save = savef

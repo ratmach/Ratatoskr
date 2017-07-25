@@ -1,5 +1,5 @@
 function Movie(name,year,image) {
-    this._public_list="name,year,image"
+    this._public_list="name,year,image";
     this.name=name;this.year=year;this.image=image;
     this.changed=false;
     this.observers = {};

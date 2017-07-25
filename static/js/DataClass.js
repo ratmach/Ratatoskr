@@ -1,5 +1,5 @@
 function DataClass(id,name,email,index,isActive) {
-    this._public_list="id,name,email,index,isActive"
+    this._public_list="id,name,email,index,isActive";
     this.id=id;this.name=name || "abcd";this.email=email;this.index=index;this.isActive=isActive;
     this.changed=false;
     this.observers = {};

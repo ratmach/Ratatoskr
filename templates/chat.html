@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+<script src="{% static 'js/Oak.js' %}"></script>
+<script src="{% static 'js/Message.js' %}"></script>
+<ul id="chat">
+
+</ul>
+<input id="name" type="text">
+<textarea id="message"></textarea>
+<button onclick="addMessage()">
+    +
+</button>
+</body>
+<script>
+    function addMessage() {
+        var newm = new Message();
+        newm.name = document.getElementById("name").value;
+        newm.message = document.getElementById("message").value;
+    }
+    initOak(undefined, oakInit);
+    function oakInit() {
+        subscribeSocket(new Message().model, -1, function (e) {
+            console.log(e);
+        });
+    }
+</script>
+</html>

@@ -7,8 +7,10 @@ from Ratatoskr.anotations import handler
 class Movie(models.Model):
     @handler(method="nameLIKE")
     def handleLIKE(self, data):
+        if len(data["name"]) == 0:
+            return []
         tmp = Movie.objects.filter(name__contains=data["name"])
-        return list(map(lambda x: x.id, tmp))
+        return list(map(lambda x: {"name": x.name, "picture": x.image}, tmp))
 
     name = models.TextField()
     year = models.IntegerField()

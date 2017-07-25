@@ -9,13 +9,16 @@ var oakQueue = []; //update socket ის რიგი
  * ახდენს სოკეტების ინიციალიზაციას
  * @param callback
  */
-function initOak(callback) {
+function initOak(callback, callbackOakm) {
     oakTree = new WebSocket("ws://" + window.location.host + "/chat/");
     oakTreeSend = new WebSocket("ws://" + window.location.host + "/chat/");
     oakTree.onmessage = function (e) {
         var tmp = JSON.parse(e.data);
         console.log("tree init");
         oakTree.onmessage = oakmessage;
+        if(callbackOakm !== undefined){
+            callbackOakm();
+        }
     };
     oakTreeSend.onopen = function () {
         if (callback) {
@@ -48,7 +51,6 @@ function queueRequest(data, method, model, callback) {
         "data": tmp,
         "callback": callback
     });
-    console.log(oakQueue);
     if (oakQueue.length === 1) {
         startRatatoskr();
     }
@@ -78,7 +80,6 @@ oak_subscription = {};
  * @param callback თუ ეს ცვლილება შემოვიდა რა უნდა მოხდეს
  */
 function subscribeSocket(dataType, objpk, callback) {
-    console.log("subscribing");
     if (!(dataType in oak_subscription)) {
         oak_subscription[dataType] = {};
     }
@@ -106,7 +107,6 @@ function cancelsubscription(dataType, objpk) {
  */
 function oakmessage(e) {
     var tmp = JSON.parse(e.data);
-    console.log(e);
     if (!("datatype" in tmp))
         return;
     console.log(tmp);

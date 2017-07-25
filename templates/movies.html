@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies</title>
+    <style>
+        img.smallImage{
+            max-height: 50px;
+        }
+    </style>
+</head>
+<body>
+<script src="{% static 'js/Oak.js' %}"></script>
+<script src="{% static 'js/Movie.js' %}"></script>
+<input type="text" onkeypress="search(this)">
+<ul id="results">
+
+</ul>
+<script>
+    initOak();
+    function search(cont) {
+        console.log("searching");
+        queueRequest({"name": cont.value}, "nameLIKE", new Movie(1).model, function (e) {
+            var container = document.getElementById("results");
+            container.innerHTML = "";
+            for (var i = 0; i < e.length; ++i) {
+                var tmp = document.createElement("li");
+                var name = document.createElement("label");
+                var pic = document.createElement("img");
+                pic.classList.add("smallImage");
+                name.innerHTML = e[i].name;
+                pic.src = e[i].picture;
+                tmp.appendChild(name);
+                tmp.appendChild(pic);
+                container.appendChild(tmp);
+            }
+        });
+    }
+</script>
+</body>
+</html>

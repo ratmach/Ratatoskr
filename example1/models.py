@@ -1,9 +1,38 @@
 import json
+from enum import auto
 
 from django.db import models
 
 from Ratatoskr.abstractNut import AbstractNut
 from Ratatoskr.anotations import handler
+
+
+class Message(models.Model):
+    name = models.TextField()
+    date = models.DateField(auto_created=True)
+    message = models.TextField()
+
+    @handler(method="CREATE")
+    def handleCREATE(self, data):
+        tmp = Message.objects.create(name=data["name"],
+                                     message=data["message"])
+        tmp.save()
+        return tmp.JSON()
+
+    def JSON(self):
+        return {
+            "name": self.name,
+            "message": self.message
+        }
+
+    class Nuts:
+        public = {'name', 'date', 'message', 'pk'}
+        index_by = 'pk'
+
+        assert (index_by in public)
+
+    class Meta:
+        verbose_name = "Message"
 
 
 class DataClass(models.Model):

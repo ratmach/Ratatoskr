@@ -1,4 +1,3 @@
-
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 import patterns as patterns
 from django.contrib.staticfiles import views
@@ -11,7 +10,8 @@ from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', TemplateView.as_view(template_name='index.html'), name="home"),
-
+    url(r'^movies/', TemplateView.as_view(template_name='movies.html'), name="movies"),
+    url(r'^ratchat/', TemplateView.as_view(template_name='chat.html'), name="ratchat"),
 ]
 
 urlpatterns += [
