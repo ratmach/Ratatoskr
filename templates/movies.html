@@ -5,18 +5,43 @@
     <meta charset="UTF-8">
     <title>Movies</title>
     <style>
-        img.smallImage{
-            max-height: 50px;
+        img.smallImage {
+            position: absolute;
+            margin: auto;
+            min-height: 100%;
+            min-width: 100%;
+            left: -100%;
+            right: -100%;
+            top: -100%;
+            bottom: -100%;
+        }
+
+        div.cropper {
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            margin: 10px;
+            position: relative;
         }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 </head>
 <body>
 <script src="{% static 'js/Oak.js' %}"></script>
 <script src="{% static 'js/Movie.js' %}"></script>
-<input type="text" onkeypress="search(this)">
-<ul id="results">
 
-</ul>
+
+<div class="row">
+    <div class="col col-lg-6">
+        <input class="form-control" style="max-width: 165px;" type="text" onkeypress="search(this)">
+    </div>
+    <div class="col col-lg-4">
+        <ul style="margin: 30px" class="list-group" id="results">
+
+        </ul>
+    </div>
+</div>
 <script>
     initOak();
     function search(cont) {
@@ -28,11 +53,14 @@
                 var tmp = document.createElement("li");
                 var name = document.createElement("label");
                 var pic = document.createElement("img");
+                var d = document.createElement("div");
+                d.classList.add("cropper");
                 pic.classList.add("smallImage");
+                d.appendChild(pic);
                 name.innerHTML = e[i].name;
                 pic.src = e[i].picture;
                 tmp.appendChild(name);
-                tmp.appendChild(pic);
+                tmp.appendChild(d);
                 container.appendChild(tmp);
             }
         });
