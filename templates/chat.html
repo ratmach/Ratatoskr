@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
@@ -8,14 +15,23 @@
 <body>
 <script src="{% static 'js/Oak.js' %}"></script>
 <script src="{% static 'js/Message.js' %}"></script>
-<ul id="chat">
 
-</ul>
-<input id="name" type="text">
-<textarea id="message"></textarea>
-<button onclick="addMessage()">
-    +
-</button>
+<div class="row">
+    <div class="col col-lg-6">
+        <ul style="margin: 30px" class="list-group" id="chat">
+
+        </ul>
+    </div>
+    <div class="col col-lg-4">
+        <label>სახელი:</label>
+        <input class="form-control" style="max-width:100px" id="name" type="text">
+        <label>მესიჯი:</label>
+        <textarea style="width:100%" id="message"></textarea>
+        <button class="btn btn-primary pull-right" style="min-width:120px" onclick="addMessage()">
+            +
+        </button>
+    </div>
+</div>
 </body>
 <script>
     function addMessage() {
@@ -30,8 +46,10 @@
             newLI(document.getElementById("chat"), e.name + " - " + e.message);
         });
     }
-    function newLI(parent, data){
+    function newLI(parent, data) {
+        console.log(data);
         var li = document.createElement("li");
+        li.class += "list-group-item";
         li.innerHTML = data;
         parent.append(li);
     }
