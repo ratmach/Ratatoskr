@@ -22,12 +22,18 @@
         var newm = new Message();
         newm.name = document.getElementById("name").value;
         newm.message = document.getElementById("message").value;
+        newm.create();
     }
     initOak(undefined, oakInit);
     function oakInit() {
         subscribeSocket(new Message().model, -1, function (e) {
-            console.log(e);
+            newLI(document.getElementById("chat"), e.name + " - " + e.message);
         });
+    }
+    function newLI(parent, data){
+        var li = document.createElement("li");
+        li.innerHTML = data;
+        parent.append(li);
     }
 </script>
 </html>

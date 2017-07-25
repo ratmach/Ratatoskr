@@ -1,6 +1,7 @@
 import json
 from enum import auto
 
+import datetime
 from django.db import models
 
 from Ratatoskr.abstractNut import AbstractNut
@@ -15,6 +16,7 @@ class Message(models.Model):
     @handler(method="CREATE")
     def handleCREATE(self, data):
         tmp = Message.objects.create(name=data["name"],
+                                     date=datetime.datetime.now(),
                                      message=data["message"])
         tmp.save()
         return tmp.JSON()

@@ -109,9 +109,10 @@ function oakmessage(e) {
     var tmp = JSON.parse(e.data);
     if (!("datatype" in tmp))
         return;
-    console.log(tmp);
     var datatype = tmp["datatype"];
     var pk = tmp["pk"];
+    if (pk === undefined)
+        pk = -1;
     if (datatype in oak_subscription) {
         func = oak_subscription[datatype][pk];
         if (func !== undefined) {
