@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 <script src="{% static 'js/Oak.js' %}"></script>
@@ -33,6 +28,7 @@
     </div>
 </div>
 </body>
+
 <script>
     function addMessage() {
         var newm = new Message();
@@ -54,4 +50,5 @@
         parent.append(li);
     }
 </script>
+
 </html>
