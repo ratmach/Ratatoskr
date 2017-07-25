@@ -18,7 +18,6 @@ class Message(models.Model):
         tmp = Message.objects.create(name=data["name"],
                                      date=datetime.datetime.now(),
                                      message=data["message"])
-        tmp.save()
         return tmp.JSON()
 
     def JSON(self):

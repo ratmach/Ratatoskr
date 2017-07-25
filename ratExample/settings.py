@@ -23,7 +23,7 @@ SECRET_KEY = '3z&#@bv8^idi5h9e)h*d+%62u0c&-(ncag+^@uh&t4jn_7!lsf'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
