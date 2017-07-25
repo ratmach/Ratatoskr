@@ -4,6 +4,7 @@
             for(var tmp in e){{
                 that.set(tmp, e[tmp]);
             }}
+            that.set("changed", false);
             if(callback)
                 callback(that);
         }}

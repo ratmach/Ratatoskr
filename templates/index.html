@@ -36,7 +36,7 @@
     }
 
     var currentPerson = new DataClass(5);
-    function subscribe() {
+    function get_(callback) {
         var name_ = document.getElementById("name");
         var email_ = document.getElementById("email");
         var isActive_ = document.getElementById("isActive");
@@ -50,8 +50,14 @@
         currentPerson.setObserver("isActive", function (e) {
             isActive_.innerHTML = currentPerson.isActive;
         });
-        currentPerson.get(function (e) {
-            subscribeSocket(e.model, e.ID, currentPerson.sync);
+        currentPerson.get(callback);
+    }
+    function subscibe(){
+        subscribeSocket(currentPerson.model, currentPerson.id, currentPerson.sync);
+    }
+    function autoUpdates(){
+        currentPerson.setObserver("changed", function (e) {
+            currentPerson.update();
         });
     }
 </script>

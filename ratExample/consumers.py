@@ -62,11 +62,13 @@ def handle_request(message):
             response = old
         elif method == "DELETE":
             model.objects.get(id=data['id']).delete()
-            response = "deleted"
+            response = {"status": "deleted"}
         elif method == "SUBSCRIBE":
+            print("subscribe")
             if request["model"] not in activeSessions:
                 activeSessions[request["model"]] = {}
             activeSessions[request["model"]][message.channel_session['room']] = True
+            response = {"status": "subscribed"}
     response_string = json_from_data(response)
     return response_string
 

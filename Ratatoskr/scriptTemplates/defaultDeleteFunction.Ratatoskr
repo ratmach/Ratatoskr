@@ -1,4 +1,8 @@
     function (callback){{
         var that = this;
-        queueRequest(that,"DELETE",  "{0}.{1}", callback);
+        queueRequest(that,"DELETE",  "{0}.{1}", function(e){{
+            that.set("changed", false);
+            if(callback)
+                callback(that);
+        }});
     }}

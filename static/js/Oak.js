@@ -78,6 +78,7 @@ oak_subscription = {};
  * @param callback თუ ეს ცვლილება შემოვიდა რა უნდა მოხდეს
  */
 function subscribeSocket(dataType, objpk, callback) {
+    console.log("subscribing");
     if (!(dataType in oak_subscription)) {
         oak_subscription[dataType] = {};
     }
@@ -105,6 +106,7 @@ function cancelsubscription(dataType, objpk) {
  */
 function oakmessage(e) {
     var tmp = JSON.parse(e.data);
+    console.log(e);
     if (!("datatype" in tmp))
         return;
     console.log(tmp);

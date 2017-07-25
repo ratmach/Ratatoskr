@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'Ratatoskr.apps.RatatoskrGenerator',
     'channels',
     'example1',
+    'movies',
 ]
 
 MIDDLEWARE = [

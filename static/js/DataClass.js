@@ -38,6 +38,7 @@ function DataClass(id,name,email,index,isActive) {
             for(var tmp in e){
                 that.set(tmp, e[tmp]);
             }
+            that.set("changed", false);
             if(callback)
                 callback(that);
         });
@@ -48,6 +49,7 @@ function DataClass(id,name,email,index,isActive) {
             for(var tmp in e){
                 that.set(tmp, e[tmp]);
             }
+            that.set("changed", false);
             if(callback)
                 callback(that);
         });
@@ -55,7 +57,11 @@ function DataClass(id,name,email,index,isActive) {
 
     this.delete =     function (callback){
         var that = this;
-        queueRequest(that,"DELETE",  "example1.DataClass", callback);
+        queueRequest(that,"DELETE",  "example1.DataClass", function(e){
+            that.set("changed", false);
+            if(callback)
+                callback(that);
+        });
     };
     this.get =     function (callback){
         var that = this;
@@ -63,6 +69,7 @@ function DataClass(id,name,email,index,isActive) {
             for(var tmp in e){
                 that.set(tmp, e[tmp]);
             }
+            that.set("changed", false);
             if(callback)
                 callback(that);
         }
@@ -72,7 +79,6 @@ function DataClass(id,name,email,index,isActive) {
     this.model = "example1.DataClass";
     this.sync = function(data){
         for(var d in data){
-            console.log(d);
             this.set(d, data[d]);
         }
     }
